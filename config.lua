@@ -1,18 +1,18 @@
 Config = {}
 Config.EnableOxLogging = false -- See https://overextended.github.io/docs/ox_lib/Logger/Server
-Config.EnableDiscordLogging = true
+Config.EnableDiscordLogging = false
 Config.MaxWidth = 5.0
 Config.MaxHeight = 5.0
 Config.MaxLength = 5.0
 Config.DamageNeeded = 100.0
 Config.IdleCamera = true
-Config.EnableProne = true
+Config.EnableProne = false
 Config.JointEffectTime = 60
 Config.RemoveWeaponDrops = true
 Config.RemoveWeaponDropsTimer = 25
-Config.DefaultPrice = 20 -- Default price for the carwash
+Config.DefaultPrice = 250 -- Default price for the carwash
 Config.DirtLevel = 0.1 -- Threshold for the dirt level to be counted as dirty
-Config.DisableAmbience = false -- Disabled distance sirens, distance car alarms, etc
+Config.DisableAmbience = true -- Disabled distance sirens, distance car alarms, etc
 Config.TimeUntilAFKKick = 1800 -- The amount of seconds it takes for you to stand AFK and get kicked
 
 Config.IgnoreGroupsForAFK = { -- The groups to ignore when checking for AFK activity
@@ -29,8 +29,8 @@ Config.Disable = {
 
 Config.Density = {
     ['parked'] = 0.8,
-    ['vehicle'] = 0.8,
-    ['multiplier'] = 0.8,
+    ['vehicle'] = 0.0,
+    ['multiplier'] = 0.0,
     ['peds'] = 0.8,
     ['scenario'] = 0.8,
 }
