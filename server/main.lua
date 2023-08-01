@@ -60,3 +60,23 @@ RegisterNetEvent('qb-carwash:server:washCar', function()
         TriggerClientEvent('QBCore:Notify', src, 'You dont have enough money..', 'error')
     end
 end)
+
+QBCore.Commands.Add("charinfo", "Character info!", {}, false, function(source)
+    local src = source
+    local Player = QBCore.Functions.GetPlayer(src)
+    TriggerClientEvent('QBCore:Notify', source, "Firstname: "..Player.PlayerData.charinfo.firstname..", ".."Lastname: "..Player.PlayerData.charinfo.lastname..", ".."Nationality: "..Player.PlayerData.charinfo.nationality..", ".."Birthdate: "..Player.PlayerData.charinfo.birthdate..", ".."Phone Number: "..Player.PlayerData.charinfo.phone..", ".."Cash: "..Player.PlayerData.money.cash..", ".."Bank: "..Player.PlayerData.money.bank.." ".."Job: "..Player.PlayerData.job.name.." ".."ID: "..Player.PlayerData.charinfo.cid.." ".."Citizen: "..Player.PlayerData.citizenid.." ".."Gang: "..Player.PlayerData.gang.label)
+    Citizen.Wait(5000)
+end)
+
+QBCore.Commands.Add('jobinfo', 'Character - Job Info!', {}, false, function(source)
+    local src = source
+    local Player = QBCore.Functions.GetPlayer(src)
+    TriggerClientEvent("QBCore:Notify", source, "Job: "..Player.PlayerData.job.name..", ".."Job Level: "..Player.PlayerData.job.grade.level..", ".."Job Grade Name: "..Player.PlayerData.job.grade.name..", ".."Payment: "..Player.PlayerData.job.payment)
+    Citizen.Wait(5000)
+end)
+
+QBCore.Commands.Add("myinfo", "Check Your player info", {}, false, function(source)
+    local src = source
+    local Player = QBCore.Functions.GetPlayer(src)
+    TriggerClientEvent('QBCore:Notify', source, 'Char ID: '..Player.PlayerData.cid..' '.. 'Citizen ID: '..Player.PlayerData.citizenid..' '.. "SID: "..source..' '..'Name: '..Player.PlayerData.charinfo.firstname..' '..Player.PlayerData.charinfo.lastname)
+end)
