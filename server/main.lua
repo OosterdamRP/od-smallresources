@@ -83,34 +83,34 @@ end)
 
 --admin
 -- als een resource start dan verzend een notificatie naar de admins
-AddEventHandler('onResourceStart', function(resource)
-    local Players = QBCore.Functions.GetPlayers()
-    for i=1, #Players, 1 do
-  		if QBCore.Functions.HasPermission(Players[i], "god") or QBCore.Functions.HasPermission(Players[i], "admin") then
-    		QBCore.Functions.Notify(Players[i], "Resource start: " .. resource, "success", "4000")
-		end
-	end
-end)
+-- AddEventHandler('onResourceStart', function(resource)
+--     local Players = QBCore.Functions.GetPlayers()
+--     for i=1, #Players, 1 do
+--   		if QBCore.Functions.HasPermission(Players[i], "god") or QBCore.Functions.HasPermission(Players[i], "admin") then
+--     		QBCore.Functions.Notify(Players[i], "Resource start: " .. resource, "success")
+-- 		end
+-- 	end
+-- end)
 
 -- als een resource stop dan verzend een notificatie naar de admins
-AddEventHandler('onResourceStop', function(resource)
-    local Players = QBCore.Functions.GetPlayers()
-    for i=1, #Players, 1 do
-  		if QBCore.Functions.HasPermission(Players[i], "god") or QBCore.Functions.HasPermission(Players[i], "admin") then
-    		QBCore.Functions.Notify(Players[i], "Resource stop: " .. resource, "error", "4000")
-		end
-	end
-end)
+-- AddEventHandler('onResourceStop', function(resource)
+--     local Players = QBCore.Functions.GetPlayers()
+--     for i=1, #Players, 1 do
+--   		if QBCore.Functions.HasPermission(Players[i], "god") or QBCore.Functions.HasPermission(Players[i], "admin") then
+--     		QBCore.Functions.Notify(Players[i], "Resource stop: " .. resource, "error")
+-- 		end
+-- 	end
+-- end)
 
 -- als een resource error dan verzend een notificatie naar de admins
-AddEventHandler('onResourceError', function(resource, err)
-    local Players = QBCore.Functions.GetPlayers()
-    for i=1, #Players, 1 do
-  		if QBCore.Functions.HasPermission(Players[i], "god") or QBCore.Functions.HasPermission(Players[i], "admin") then
-    		QBCore.Functions.Notify(Players[i], "Resource error: " .. resource .. " error: " .. err, "error", "4000")
-        end
-    end
-end)
+-- AddEventHandler('onResourceError', function(resource, err)
+--     local Players = QBCore.Functions.GetPlayers()
+--     for i=1, #Players, 1 do
+--   		if QBCore.Functions.HasPermission(Players[i], "god") or QBCore.Functions.HasPermission(Players[i], "admin") then
+--     		QBCore.Functions.Notify(Players[i], "Resource error: " .. resource .. " error: " .. err, "error")
+--         end
+--     end
+-- end)
 
 -- player joining notify and loaded in
 
@@ -146,4 +146,19 @@ AddEventHandler('playerConnecting', function(playerName, setKickReason, deferral
             end
 		end
 	end
+end)
+
+AddEventHandler('txAdmin:events:announcement', function(eventData)
+    CreateThread(function()
+        QBCore.Functions.Notify(eventData.message, "success", "4000")
+        Wait(1000)
+    end)
+    print("TXADMIN: " .. eventData.message .. " | " .. eventData.author)
+end)
+
+-- 1 Minutes Reminder
+AddEventHandler('txAdmin:events:scheduledRestart', function(eventData)
+    if eventData.secondsRemaining == 60 then
+        QBCore.Functions.Notify("TXADMIN: " .. eventData.message, "success", "4000")
+    end
 end)
