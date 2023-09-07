@@ -8,6 +8,8 @@ shared_script 'config.lua'
 shared_script '@ox_lib/init.lua'
 server_script 'server/*.lua'
 client_script 'client/*.lua'
+ui_page 'ui/index.html'
+
 
 data_file 'FIVEM_LOVES_YOU_4B38E96CC036038F' 'events.meta'
 data_file 'FIVEM_LOVES_YOU_341B23A2F0E0F131' 'popgroups.ymt'
@@ -15,7 +17,12 @@ data_file 'FIVEM_LOVES_YOU_341B23A2F0E0F131' 'popgroups.ymt'
 files {
 	'events.meta',
 	'popgroups.ymt',
-	'relationships.dat'
+	'relationships.dat',
+    'ui/index.html',
+	'ui/global.css',
+	'ui/style.css',
+	'ui/main.js',
+	'ui/assets/*.*'
 }
 
 dependencies {
