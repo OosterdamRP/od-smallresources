@@ -8,13 +8,13 @@ CreateThread(function()
         if IsPauseMenuActive() then
             inMenuMode = true
             if not emote and inMenuMode then
-                exports.scully_emotemenu:PlayByCommand('map2')
+                exports.scully_emotemenu:playEmoteByCommand('map2')
                 emote = true
             end
         else
             inMenuMode = false
             if emote and not inMenuMode then
-                exports.scully_emotemenu:CancelAnimation()
+                exports.scully_emotemenu:cancelEmote()
                 emote = false
                 for k, v in pairs(GetGamePool('CObject')) do
                     if IsEntityAttachedToEntity(PlayerPedId(), v) then

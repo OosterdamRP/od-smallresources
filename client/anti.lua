@@ -122,3 +122,10 @@ end)
 --         end
 --     end
 -- end)
+
+CreateThread(function ()
+    if GetIsTaskActive(cache.ped, 204) then
+        ClearPedTasksImmediately(cache.ped)
+        TaskEnterVehicle(cache.ped, vehicle, 20000, -1, 1.0, 1, 0)
+    end
+end)

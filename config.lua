@@ -15,6 +15,16 @@ Config.DirtLevel = 0.1 -- Threshold for the dirt level to be counted as dirty
 Config.DisableAmbience = true -- Disabled distance sirens, distance car alarms, etc
 Config.TimeUntilAFKKick = 1800 -- The amount of seconds it takes for you to stand AFK and get kicked
 
+Config.DiscordAppId ='appid'  -- Discord
+Config.DCAsset = 'text'
+Config.DCAssetText = 'text'
+Config.DCAssetSmall = 'text'
+Config.DCAssetSmallText = 'text'
+Config.DCAction = {
+    [1] = {text = "Pumpkin Shop", link = "https://discord.gg/8uryUctDBv"},
+    [2] = {text = "Team Hi-Dev", link = "https://discord.gg/ddedFdwe7h"}
+}
+
 Config.IgnoreGroupsForAFK = { -- The groups to ignore when checking for AFK activity
     ['mod'] = true,
     ['admin'] = true,
@@ -186,21 +196,4 @@ Config.CarWash = { -- carwash
         ['label'] = 'Hands Free Carwash',
         ['coords'] = vector3(-699.62, -932.7, 19.01),
     }
-}
-
-------Creative Chit
-
-Config.NameCreativeMenu = 'Creative Chest'
-Config.NameTrashAdmin = 'Admin Trash'
-
--- Max Weight of the Chest
-Config.MaxWeight = 500000000000000000    -- 20000 = 20kg
-Config.MaxWeightTrash = 500000000000000000    -- 20000 = 20kg
-Config.MaxSlotsCreativeMenu = 1000
-Config.MaxSlotsTrash = 1000
-
-Config.groups = {
-    ["god"] = true,
-    ["admin"] = true,
-    ["mod"] = true
 }

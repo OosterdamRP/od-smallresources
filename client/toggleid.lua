@@ -1,81 +1,102 @@
-local toggleID = false
-local isKeyHeld = false
-local maxDistance = 10.0 -- Set your desired maximum distance
-
-Citizen.CreateThread(function()
-    while true do
-        Citizen.Wait(0)
-        isKeyHeld = IsControlPressed(0, 137) -- Caps key
-        if not isKeyHeld and toggleID then
-            toggleID = false
-        elseif isKeyHeld and not toggleID then
-            toggleID = true
-        end
-    end
-end)
-
--- Functions
-local function DrawText3D(x, y, z, text)
-    SetDrawOrigin(x, y, z + 1.0, 0)
-    SetTextScale(0.35, 0.35)
-    SetTextFont(4)
-    SetTextProportional(1)
-    SetTextColour(255, 255, 255, 215)
-    SetTextEntry("STRING")
-    SetTextCentre(true)
-    AddTextComponentString(text)
-    DrawText(0.0, 0.0)
-    local factor = (string.len(text)) / 370
-    DrawRect(0.0, 0.0 + 0.0125, 0.017 + factor, 0.03, 0, 0, 0, 75)
-    ClearDrawOrigin()
-end
+local onlinePlayers, forceDraw = {}, false
 
 local function GetPlayers()
     local players = {}
-    local activePlayers = GetActivePlayers()
-    for i = 1, #activePlayers do
-        local player = activePlayers[i]
+    for _, player in ipairs(GetActivePlayers()) do
         local ped = GetPlayerPed(player)
         if DoesEntityExist(ped) then
-            players[#players + 1] = player
+            table.insert(players, player)
         end
     end
     return players
 end
 
-local function GetPlayersFromCoords(coords, distance)
-    local players = GetPlayers()
-    local closePlayers = {}
+local function GetPlayersInArea(coords, area)
+	local players, playersInArea = GetPlayers(), {}
+	local coords = vector3(coords.x, coords.y, coords.z)
+	for i=1, #players, 1 do
+		local target = GetPlayerPed(players[i])
+		local targetCoords = GetEntityCoords(target)
 
-    coords = coords or GetEntityCoords(PlayerPedId())
-    distance = distance or 5.0
-
-    for i = 1, #players do
-        local player = players[i]
-        local target = GetPlayerPed(player)
-        local targetCoords = GetEntityCoords(target)
-        local targetDistance = #(targetCoords - coords)
-        if targetDistance <= distance then
-            closePlayers[#closePlayers + 1] = player
-        end
-    end
-
-    return closePlayers
+		if #(coords - targetCoords) <= area then
+			table.insert(playersInArea, players[i])
+		end
+	end
+	return playersInArea
 end
 
--- Thread to display player IDs
-Citizen.CreateThread(function()
-    while true do
-        Citizen.Wait(0)
-        if toggleID then
-            local playerCoords = GetEntityCoords(PlayerPedId())
-            local nearbyPlayers = GetPlayersFromCoords(playerCoords, maxDistance)
-            for _, player in ipairs(nearbyPlayers) do
-                local playerId = GetPlayerServerId(player)
-                local playerPed = GetPlayerPed(player)
-                local playerCoords = GetEntityCoords(playerPed)
-                DrawText3D(playerCoords.x, playerCoords.y, playerCoords.z, '[' .. playerId .. ']')
+local function GetNeareastPlayers()
+    local playerPed = PlayerPedId()
+    local players_clean = {}
+    local playerCoords = GetEntityCoords(playerPed)
+    if IsPedInAnyVehicle(playerPed, false) then
+        local playersId = tostring(GetPlayerServerId(PlayerId()))
+        table.insert(players_clean, {topText = onlinePlayers[playersId], playerId = playersId, coords = playerCoords} )
+    else
+        local players, _ = GetPlayersInArea(playerCoords, 4)
+        for i = 1, #players, 1 do
+            local playerServerId = GetPlayerServerId(players[i])
+            local player = GetPlayerFromServerId(playerServerId)
+            local ped = GetPlayerPed(player)
+            if IsEntityVisible(ped) then
+                for x, identifier in pairs(onlinePlayers) do 
+                    if x == tostring(playerServerId) then
+                        table.insert(players_clean, {topText = identifier:upper(), playerId = playerServerId, coords = GetEntityCoords(ped)})
+                    end
+                end
             end
         end
+    end
+    return players_clean
+end
+
+local function Draw3DText(x, y, z, text, newScale)
+    local onScreen, _x, _y = World3dToScreen2d(x, y, z)
+    if onScreen then
+        local dist = GetDistanceBetweenCoords(GetGameplayCamCoords(), x, y, z, 1)
+        local scale = newScale * (1 / dist) * (1 / GetGameplayCamFov()) * 100
+        SetTextScale(scale, scale)
+        SetTextFont(4)
+        SetTextProportional(1)
+        SetTextColour(255, 255, 255, 255)
+        SetTextDropShadow(0, 0, 0, 0, 255)
+        SetTextDropShadow()
+        SetTextEdge(4, 0, 0, 0, 255)
+        SetTextOutline()
+        SetTextEntry("STRING")
+        SetTextCentre(1)
+        AddTextComponentString(text)
+        DrawText(_x, _y)
+    end
+end
+
+CreateThread(function()
+    TriggerServerEvent("od-showid:add-id")
+    while true do
+        Wait(1)
+        if IsControlPressed(0, 20) or forceDraw then
+            for k, v in pairs(GetNeareastPlayers()) do
+                local x, y, z = table.unpack(v.coords)
+                Draw3DText(x, y, z + 1.1, v.playerId, 1.6)
+                Draw3DText(x, y, z + 1.20, v.topText, 1.0)
+            end
+        end
+    end
+end)
+
+RegisterNetEvent('od-showid:client:add-id')
+AddEventHandler('od-showid:client:add-id', function(identifier, playerSource)
+    if playerSource then
+        onlinePlayers[playerSource] = identifier
+    else
+        onlinePlayers = identifier
+    end
+end)
+
+RegisterCommand("id", function()
+    if not forceDraw then
+        forceDraw = not forceDraw
+        Wait(5000)
+        forceDraw = false
     end
 end)

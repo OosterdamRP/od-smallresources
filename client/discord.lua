@@ -1,44 +1,22 @@
--- To Set This Up visit https://forum.cfx.re/t/how-to-updated-discord-rich-presence-custom-image/157686
-
-local playersConnected = GlobalState.PlayerCount
-
-AddStateBagChangeHandler('PlayerCount', nil, function(bagName, _, value)
-     if bagName ~= "global" or not value then return end
-     playersConnected = value
-end)
-
 CreateThread(function()
+    SetDiscordAppId(Config.DiscordAppId)
+
+    SetDiscordRichPresenceAsset(Config.DCAsset)
+    SetDiscordRichPresenceAssetText(Config.DCAssetText)
+
+    SetDiscordRichPresenceAssetSmall(Config.DCAssetSmall)
+    SetDiscordRichPresenceAssetSmallText(Config.DCAssetSmallText)
+
+    SetDiscordRichPresenceAction(0, Config.DCAction[1].text, Config.DCAction[1].link)
+    SetDiscordRichPresenceAction(1, Config.DCAction[2].text, Config.DCAction[2].link)
+
     while true do
-        -- This is the Application ID (Replace this with you own)
-        SetDiscordAppId()
+        TriggerServerEvent('knoes_discord_presence:get_data')
 
-        -- Here you will have to put the image name for the 'large' icon.
-        SetDiscordRichPresenceAsset('logo_name')
-
-        -- (11-11-2018) New Natives:
-
-        -- Here you can add hover text for the 'large' icon.
-        SetDiscordRichPresenceAssetText('This is a lage icon with text')
-
-        -- Here you will have to put the image name for the 'small' icon.
-        SetDiscordRichPresenceAssetSmall('logo_name')
-
-        -- Here you can add hover text for the 'small' icon.
-        SetDiscordRichPresenceAssetSmallText('This is a lsmall icon with text')
-
-        SetRichPresence(('Players %s/64'):format(playersConnected))
-
-        -- (26-02-2021) New Native:
-
-        --[[
-            Here you can add buttons that will display in your Discord Status,
-            First paramater is the button index (0 or 1), second is the title and
-            last is the url (this has to start with 'fivem://connect/' or 'https://')
-        ]]--
-        SetDiscordRichPresenceAction(0, 'First Button!', 'fivem://connect/localhost:30120')
-        SetDiscordRichPresenceAction(1, 'Second Button!', 'fivem://connect/localhost:30120')
-
-        -- It updates every minute just in case.
         Wait(60000)
     end
+end)
+
+RegisterNetEvent("knoes_discord_presence:receive_data", function(richPresenceString)
+    SetRichPresence(richPresenceString)
 end)

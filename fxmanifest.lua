@@ -4,8 +4,10 @@ game 'gta5'
 description 'QB-SmallResources'
 version '1.1.0'
 
-shared_script 'config.lua'
-shared_script '@ox_lib/init.lua'
+shared_scripts {
+	'config.lua',
+	'@ox_lib/init.lua'
+}
 server_script 'server/*.lua'
 client_script 'client/*.lua'
 ui_page 'ui/index.html'
